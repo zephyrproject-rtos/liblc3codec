@@ -1,0 +1,43 @@
+cc_library_static {
+    name: "liblc3codec",
+    apex_available: [
+
+        "//apex_available:platform",
+        "com.android.bluetooth.updatable"
+    ],
+    defaults: ["fluoride_defaults"],
+    srcs: [
+        "Common/*.cpp",
+        "Common/Tables/*.cpp",
+        "Encoder/*.cpp",
+        "Decoder/*.cpp",
+        "TestSupport/DatapointsAndroid.cpp",
+    ],
+    cflags: [
+        "-Werror",
+        "-Wmissing-braces",
+        "-Wno-unused-parameter",
+        "-Wno-#warnings",
+        "-Wuninitialized",
+        "-Wno-self-assign",
+        "-Wno-implicit-fallthrough",
+    ],
+    sanitize: {
+        misc_undefined:[
+           "unsigned-integer-overflow",
+           "signed-integer-overflow",
+           "bounds",
+        ],
+        cfi: true,
+    },
+    shared_libs: [
+        "liblog",
+    ],
+    export_include_dirs: [
+        "Api",
+        "Common",
+        "Common/Tables",
+        "Common/KissFft",
+        "TestSupport",
+    ],
+}
