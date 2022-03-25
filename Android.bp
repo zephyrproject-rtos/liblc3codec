@@ -1,19 +1,27 @@
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "system_bt_license"
+    // to get the below license kinds:
+    //   SPDX-license-identifier-Apache-2.0
+    default_applicable_licenses: ["system_bt_license"],
+}
+
 cc_library_static {
-    name: "liblc3codec",
+    name: "liblc3",
+    host_supported: true,
     apex_available: [
 
         "//apex_available:platform",
-        "com.android.bluetooth.updatable"
+        "com.android.bluetooth"
     ],
     defaults: ["fluoride_defaults"],
     srcs: [
-        "Common/*.cpp",
-        "Common/Tables/*.cpp",
-        "Encoder/*.cpp",
-        "Decoder/*.cpp",
-        "TestSupport/DatapointsAndroid.cpp",
+        "src/*.c",
     ],
     cflags: [
+        "-O3",
+        "-ffast-math",
         "-Werror",
         "-Wmissing-braces",
         "-Wno-unused-parameter",
@@ -22,22 +30,32 @@ cc_library_static {
         "-Wno-self-assign",
         "-Wno-implicit-fallthrough",
     ],
-    sanitize: {
-        misc_undefined:[
-           "unsigned-integer-overflow",
-           "signed-integer-overflow",
-           "bounds",
-        ],
-        cfi: true,
+    target: {
+       android: {
+            sanitize: {
+                misc_undefined:[
+                   "unsigned-integer-overflow",
+                   "signed-integer-overflow",
+                   "bounds",
+                ],
+                cfi: true,
+            },
+       },
     },
-    shared_libs: [
-        "liblog",
-    ],
     export_include_dirs: [
-        "Api",
-        "Common",
-        "Common/Tables",
-        "Common/KissFft",
-        "TestSupport",
+        "include",
     ],
 }
+
+cc_fuzz {
+  name: "liblc3_fuzzer",
+
+  srcs: [
+    "fuzzer/liblc3_fuzzer.cpp",
+  ],
+
+  static_libs: [
+    "liblc3",
+  ],
+}
+
