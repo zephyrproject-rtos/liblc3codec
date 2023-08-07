@@ -98,13 +98,13 @@ void lc3_setup_bits(struct lc3_bits *bits,
     if (mode == LC3_BITS_MODE_READ) {
         struct lc3_bits_ac *ac = &bits->ac;
         struct lc3_bits_accu *accu = &bits->accu;
-        struct lc3_bits_buffer *buffer = &bits->buffer;
+        struct lc3_bits_buffer *bits_buffer = &bits->buffer;
 
-        ac->low  = ac_get(buffer) << 16;
-        ac->low |= ac_get(buffer) <<  8;
-        ac->low |= ac_get(buffer);
+        ac->low  = ac_get(bits_buffer) << 16;
+        ac->low |= ac_get(bits_buffer) <<  8;
+        ac->low |= ac_get(bits_buffer);
 
-        accu_load(accu, buffer);
+        accu_load(accu, bits_buffer);
     }
 }
 
